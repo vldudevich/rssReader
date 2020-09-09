@@ -24,6 +24,8 @@
 		867E095A25067EEE008B1A47 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867E095925067EEE008B1A47 /* DataManager.swift */; };
 		867E095D25076F6E008B1A47 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867E095C25076F6E008B1A47 /* TopicTableViewCell.swift */; };
 		86B9C5E025078DD3009972D9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9C5DF25078DD3009972D9 /* Utils.swift */; };
+		86B9C5E22508E7BF009972D9 /* CustomWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9C5E12508E7BF009972D9 /* CustomWebViewController.swift */; };
+		86B9C5E42508F527009972D9 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9C5E32508F527009972D9 /* UIView.swift */; };
 		B165B298B3AD0E7F8B03D08F /* Pods_RssReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AEDAD8A3C95391ECEEE79C /* Pods_RssReader.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +52,8 @@
 		867E095925067EEE008B1A47 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		867E095C25076F6E008B1A47 /* TopicTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicTableViewCell.swift; sourceTree = "<group>"; };
 		86B9C5DF25078DD3009972D9 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		86B9C5E12508E7BF009972D9 /* CustomWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebViewController.swift; sourceTree = "<group>"; };
+		86B9C5E32508F527009972D9 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				867E094325064D97008B1A47 /* String.swift */,
+				86B9C5E32508F527009972D9 /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 		867E094C25067C97008B1A47 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				86B9C5E52508F863009972D9 /* SubViews */,
 				867E095B25076F45008B1A47 /* Cell */,
 				867E095325067CD9008B1A47 /* TopicViewInput.swift */,
 				867E094825067BBA008B1A47 /* TopicViewController.swift */,
@@ -185,6 +191,14 @@
 				86B9C5DF25078DD3009972D9 /* Utils.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		86B9C5E52508F863009972D9 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				86B9C5E12508E7BF009972D9 /* CustomWebViewController.swift */,
+			);
+			path = SubViews;
 			sourceTree = "<group>";
 		};
 		A137CC053AC659BEF7689E06 /* Pods */ = {
@@ -311,8 +325,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86B9C5E42508F527009972D9 /* UIView.swift in Sources */,
 				867E095825067E26008B1A47 /* API.swift in Sources */,
 				867E095A25067EEE008B1A47 /* DataManager.swift in Sources */,
+				86B9C5E22508E7BF009972D9 /* CustomWebViewController.swift in Sources */,
 				867E095D25076F6E008B1A47 /* TopicTableViewCell.swift in Sources */,
 				867E094E25067CB3008B1A47 /* TopicViewPresenter.swift in Sources */,
 				867E095625067CE3008B1A47 /* TopicViewOutput.swift in Sources */,

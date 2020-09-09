@@ -46,8 +46,10 @@ extension TopicViewController: UITableViewDataSource {
 }
 extension TopicViewController: TopicTableViewCellDelegate {
     func readLinkLocal(_ cell: TopicTableViewCell) {
-        guard let indexTopic = topicsTableView.indexPath(for: cell)?.row else { return }
-        
+        let webView = CustomWebViewController()
+        guard let indexTopic = topicsTableView.indexPath(for: cell)?.row else {return}
+        webView.url = topicLists[indexTopic].link
+        self.navigationController?.pushViewController(webView, animated: true)
     }
 }
 
