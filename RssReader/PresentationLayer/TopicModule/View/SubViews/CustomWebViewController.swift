@@ -17,7 +17,6 @@ class CustomWebViewController: UIViewController {
         super.viewDidLoad()
         
         let webView = WKWebView()
-    
         let urlRequest = URLRequest(url: URL(string: url)!)
         
         webView.load(urlRequest)

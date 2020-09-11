@@ -12,15 +12,32 @@ class TopicViewController: UIViewController {
     
     @IBOutlet private weak var topicsTableView: UITableView!
     
+    @IBOutlet weak var topicSearchBar: UISearchBar!
+    
     let url = "http://feeds.dzone.com/agile"
     
     var output: TopicViewOutput!
     var topicLists = [RSSItem]()
+    var searchLists = [RSSItem]()
     var activityIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         output.viewDidOnLoad()
+    }
+}
+
+private extension TopicViewController {
+    func createActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        activityIndicator.style = UIActivityIndicatorView.Style.gray
+        activityIndicator.center = self.view.center
+        self.view.addSubview(activityIndicator)
+    }
+    
+    @objc func settingButtonTouchUpInside(_ sender: Any) {
+        let settingsVC = UIStoryboard(name: "SettingsViewController", bundle: nil).instantiateInitialViewController() as? SettingsViewController
+        self.navigationController?.pushViewController(settingsVC!, animated: true)
     }
 }
 
@@ -32,23 +49,25 @@ extension TopicViewController: UITableViewDelegate {
 
 extension TopicViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return topicLists.count
+        return searchLists.count
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = topicsTableView.dequeueReusableCell(withIdentifier: TopicTableViewCell.identifier) as! TopicTableViewCell
         cell.delegate = self
-        cell.configureCell(topic: topicLists[indexPath.row])
+        cell.configureCell(topic: searchLists[indexPath.row])
+        
         return cell
     }
     
 }
+
 extension TopicViewController: TopicTableViewCellDelegate {
     func readLinkLocal(_ cell: TopicTableViewCell) {
         let webView = CustomWebViewController()
         guard let indexTopic = topicsTableView.indexPath(for: cell)?.row else {return}
-        webView.url = topicLists[indexTopic].link
+        webView.url = searchLists[indexTopic].link
         self.navigationController?.pushViewController(webView, animated: true)
     }
 }
@@ -56,6 +75,7 @@ extension TopicViewController: TopicTableViewCellDelegate {
 extension TopicViewController: FeedParserDelegate {
     func feedGetElements(rssItems: [RSSItem]) {
         topicLists = rssItems
+        searchLists = topicLists
         print(rssItems)
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
@@ -67,18 +87,20 @@ extension TopicViewController: FeedParserDelegate {
 }
 
 extension TopicViewController: TopicViewInput {
+    
     func setupState() {
-        
         topicsTableView.delegate = self
         topicsTableView.dataSource = self
         topicsTableView.isHidden = true
+        
+        topicSearchBar.delegate = self
         let feed = FeedParser()
         feed.delegate = self
         feed.parseFeed(url: url)
 
         self.title = "Dzone RSS News"
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), landscapeImagePhone: UIImage(named: "settings"), style: .plain, target: self, action: nil)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), landscapeImagePhone: UIImage(named: "settings"), style: .plain, target: self, action: #selector(settingButtonTouchUpInside))
         
         createActivityIndicator()
         activityIndicator.startAnimating()
@@ -86,11 +108,19 @@ extension TopicViewController: TopicViewInput {
     }
 }
 
-private extension TopicViewController {
-    func createActivityIndicator() {
-        activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        activityIndicator.style = UIActivityIndicatorView.Style.gray
-        activityIndicator.center = self.view.center
-        self.view.addSubview(activityIndicator)
+extension TopicViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchLists.removeAll()
+        if searchText == "" {
+            searchLists = topicLists
+            topicsTableView.reloadData()
+        }
+        
+        for item in topicLists {
+            if searchText != "" && item.title.contains(searchText) {
+                searchLists.append(item)
+            }
+        }
+        topicsTableView.reloadData()
     }
 }

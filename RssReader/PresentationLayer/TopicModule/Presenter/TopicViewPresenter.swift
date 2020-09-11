@@ -9,6 +9,10 @@
 import Foundation
 
 class TopicViewPresenter: TopicViewOutput {
+    func searchTopicByTitleName(stringToSearch: String) {
+        
+    }
+    
     
     weak var view: TopicViewInput!
     

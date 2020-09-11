@@ -10,4 +10,5 @@ import Foundation
 
 protocol TopicViewOutput {
     func viewDidOnLoad()
+    func searchTopicByTitleName(stringToSearch: String)
 }

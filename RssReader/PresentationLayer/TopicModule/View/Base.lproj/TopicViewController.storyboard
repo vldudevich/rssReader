@@ -22,7 +22,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ftq-vG-aHo">
-                                <rect key="frame" x="360.5" y="104" width="37.5" height="37.5"/>
+                                <rect key="frame" x="360.5" y="106" width="37.5" height="37.5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="filter"/>
                             </button>
@@ -115,6 +115,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="alO-fw-Pvj"/>
                     <connections>
+                        <outlet property="topicSearchBar" destination="NPd-2W-0Lc" id="IBl-D4-TMo"/>
                         <outlet property="topicsTableView" destination="uD4-ot-Nwc" id="aDa-IG-bbt"/>
                     </connections>
                 </viewController>
