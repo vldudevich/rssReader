@@ -42,6 +42,7 @@ class SettingsViewController: UIViewController {
     
     @IBAction private func saveConfigurationTouchUpInside(_ sender: Any) {
         if topicLists.count != 0 {
+            delegate.saveSettings(for: topicLists)
             self.dismiss(animated: true, completion: nil)
         } else {
             var alertController = UIAlertController()
@@ -49,8 +50,6 @@ class SettingsViewController: UIViewController {
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController.addAction(action)
             self.present(alertController, animated: true, completion: nil)
-            
-            delegate.saveSettings(for: topicLists)
         }
     }
     

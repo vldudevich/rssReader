@@ -10,4 +10,5 @@ import Foundation
 
 protocol TopicViewInput: AnyObject {
     func setupState()
+    func topicsGet(items: [RSSItem])
 }

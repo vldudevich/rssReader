@@ -7,3 +7,15 @@
 //
 
 import Foundation
+
+class DataManager {
+    func getTopicData(url: String, topicData: @escaping (Data) -> Void) {
+        let api = API()
+        api.request(for: url, success: { (data) in
+            topicData(data)
+        }) { (error) in
+            print(error)
+        }
+    }
+    
+}

@@ -23,7 +23,7 @@ class TopicViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        output.viewDidOnLoad()
+        output.viewDidOnLoad(urlToSearch: url)
     }
 }
 
@@ -37,7 +37,8 @@ private extension TopicViewController {
     
     @objc func settingButtonTouchUpInside(_ sender: Any) {
         let settingsVC = UIStoryboard(name: "SettingsViewController", bundle: nil).instantiateInitialViewController() as? SettingsViewController
-        self.navigationController?.pushViewController(settingsVC!, animated: true)
+        settingsVC?.delegate = self
+        self.present(settingsVC!, animated: true)
     }
 }
 
@@ -87,6 +88,17 @@ extension TopicViewController: FeedParserDelegate {
 }
 
 extension TopicViewController: TopicViewInput {
+    func topicsGet(items: [RSSItem]) {
+        topicLists = items
+        searchLists = topicLists
+        print(items)
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.hidesWhenStopped = true
+            self.topicsTableView.isHidden = false
+            self.topicsTableView.reloadData()
+        }
+    }
     
     func setupState() {
         topicsTableView.delegate = self
@@ -94,9 +106,6 @@ extension TopicViewController: TopicViewInput {
         topicsTableView.isHidden = true
         
         topicSearchBar.delegate = self
-        let feed = FeedParser()
-        feed.delegate = self
-        feed.parseFeed(url: url)
 
         self.title = "Dzone RSS News"
 
@@ -122,5 +131,11 @@ extension TopicViewController: UISearchBarDelegate {
             }
         }
         topicsTableView.reloadData()
+    }
+}
+
+extension TopicViewController: SaveStateCategoriesDelegate {
+    func saveSettings(for list: [String]) {
+        print(list)
     }
 }

@@ -68,7 +68,11 @@ class FeedParser: NSObject, XMLParserDelegate {
         task.resume()
         
     }
-    
+    func parseTopic(data: Data) {
+        let parser = XMLParser(data: data)
+        parser.delegate = self
+        parser.parse()
+    }
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         currentElement = elementName
         if currentElement == "item" {
@@ -99,6 +103,7 @@ class FeedParser: NSObject, XMLParserDelegate {
         default: break
         }
     }
+    
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "item" {
             let rssItem = RSSItem(title: currentTitle, link: currentLink, description: currentDescription, category: currentCategory, pubDate: currentPubDate, currentMedia: currentMedia)

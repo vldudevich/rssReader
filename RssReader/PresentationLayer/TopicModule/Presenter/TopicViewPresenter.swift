@@ -9,14 +9,31 @@
 import Foundation
 
 class TopicViewPresenter: TopicViewOutput {
+    func viewDidOnLoad(urlToSearch: String) {
+        view.setupState()
+        getTopicData(urlToSearch: urlToSearch)
+    }
+    
+
+    weak var view: TopicViewInput!
+    
     func searchTopicByTitleName(stringToSearch: String) {
         
     }
     
     
-    weak var view: TopicViewInput!
-    
-    func viewDidOnLoad() {
-        view.setupState()
+    private func getTopicData(urlToSearch: String) {
+        let dataManager = DataManager()
+        dataManager.getTopicData(url: urlToSearch) { (data) in
+            let parser = FeedParser()
+            parser.delegate = self
+            parser.parseTopic(data: data)
+        }
+    }
+}
+
+extension TopicViewPresenter: FeedParserDelegate {
+    func feedGetElements(rssItems: [RSSItem]) {
+        view.topicsGet(items: rssItems)
     }
 }

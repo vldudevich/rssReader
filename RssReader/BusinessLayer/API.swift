@@ -27,3 +27,19 @@ enum TopicThemes: String {
     case webDev = "/webdev"
     
 }
+
+class API {
+    func request(for url: String, success: @escaping (Data) -> Void, failure: @escaping (URLResponse?) -> Void) {
+        let request = URLRequest(url: URL(string: url)!)
+        let urlSession = URLSession.shared
+        let task = urlSession.dataTask(with: request) { (data, error, _)  in
+            if let data = data {
+                success(data)
+            } else {
+                failure(error)
+            }
+        }
+        task.resume()
+    }
+
+}
