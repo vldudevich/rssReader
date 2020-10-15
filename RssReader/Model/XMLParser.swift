@@ -9,18 +9,32 @@
 import Foundation
 import UIKit
 
-protocol FeedParserDelegate {
+protocol FeedParserDelegate: AnyObject {
     func feedGetElements(rssItems: [RSSItem])
 }
 
-struct RSSItem {
-    var title: String
-    var link: String
-    var description: String
-    var category: [String]
-    var pubDate: String
-    var currentMedia: String
-
+class RSSItem {
+    
+    var title: String = ""
+    var link: String = ""
+    var description: String = ""
+    var category: [String] = []
+    var pubDate: String = ""
+    var currentMedia: String = ""
+    var isLoad: Bool = false
+    
+    init(title: String, link: String, description: String, category: [String], pubDate: String, currentMedia: String, isload: Bool) {
+        
+        self.title = title
+        self.link = link
+        self.description = description
+        self.category = category
+        self.pubDate = pubDate
+        self.currentMedia = currentMedia
+        self.isLoad = isload
+        
+    }
+    
     func getImage(succes: @escaping (_ success: UIImage) -> Void)  {
         if let url = URL(string: currentMedia) {
             Utils.load(url: url) { (image) in
@@ -52,8 +66,9 @@ class FeedParser: NSObject, XMLParserDelegate {
     private var currentCategory: [String] = []
     private var currentPubDate: String = ""
     private var currentMedia: String = ""
+    private var currentStateIsLoad: Bool = false
     
-    var delegate: FeedParserDelegate?
+    weak var delegate: FeedParserDelegate?
     
     func parseFeed(url: String) {
         
@@ -106,7 +121,7 @@ class FeedParser: NSObject, XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "item" {
-            let rssItem = RSSItem(title: currentTitle, link: currentLink, description: currentDescription, category: currentCategory, pubDate: currentPubDate, currentMedia: currentMedia)
+            let rssItem = RSSItem(title: currentTitle, link: currentLink, description: currentDescription, category: currentCategory, pubDate: currentPubDate, currentMedia: currentMedia, isload: currentStateIsLoad)
             self.rssItems.append(rssItem)
         }
     }

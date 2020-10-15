@@ -7,23 +7,25 @@
 //
 
 import UIKit
+import CoreData
 
 class TopicViewController: UIViewController {
     
     @IBOutlet private weak var topicsTableView: UITableView!
-    
-    @IBOutlet weak var topicSearchBar: UISearchBar!
-    
-    let url = "http://feeds.dzone.com/agile"
+    @IBOutlet private weak var topicSearchBar: UISearchBar!
+    @IBOutlet private weak var modesState: UISegmentedControl!
     
     var output: TopicViewOutput!
-    var topicLists = [RSSItem]()
-    var searchLists = [RSSItem]()
-    var activityIndicator = UIActivityIndicatorView()
+    
+    private var topicLists = [RSSItem]()
+    private var searchLists = [RSSItem]()
+    private var activityIndicator = UIActivityIndicatorView()
+    
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        output.viewDidOnLoad(urlToSearch: url)
+        output.viewDidOnLoad()
     }
 }
 
@@ -35,85 +37,141 @@ private extension TopicViewController {
         self.view.addSubview(activityIndicator)
     }
     
-    @objc func settingButtonTouchUpInside(_ sender: Any) {
-        let settingsVC = UIStoryboard(name: "SettingsViewController", bundle: nil).instantiateInitialViewController() as? SettingsViewController
-        settingsVC?.delegate = self
-        self.present(settingsVC!, animated: true)
+    func showSettingController() {
+        let settingsNavController = UIStoryboard(name: "SettingsViewController", bundle: nil).instantiateInitialViewController() as? UINavigationController
+        let viewController = settingsNavController?.viewControllers.first as? SettingsViewController
+        viewController?.delegate = self
+        self.present(settingsNavController!, animated: true)
+    }
+
+    func startActivityIndicator() {
+
+        topicsTableView.isHidden = true
+        createActivityIndicator()
+        activityIndicator.startAnimating()
+        activityIndicator.backgroundColor = .white
+    }
+    
+    @objc func settingButtonTouchUpInside(_ sender: UIButton) {
+        showSettingController()
+    }
+    
+   @IBAction func changeModesControlSwitch(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 1 {
+            searchLists.removeAll()
+            topicLists.filter {$0.isLoad}.forEach {searchLists.append($0) }
+            topicsTableView.reloadData()
+        } else {
+            searchLists = topicLists
+            topicsTableView.reloadData()
+            
+        }
+    }
+    
+    func hideIndicator() {
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.hidesWhenStopped = true
+            self.activityIndicator.isHidden = true
+            self.topicsTableView.isHidden = false
+            self.topicsTableView.reloadData()
+        }
+    }
+    
+    @objc func refreshTable(_ sender: UIRefreshControl) {
+        output.updateTopics()
+        sender.endRefreshing()
     }
 }
 
-extension TopicViewController: UITableViewDelegate {
+extension TopicViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         topicsTableView.deselectRow(at: indexPath, animated: true)
     }
-}
-
-extension TopicViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchLists.count
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = topicsTableView.dequeueReusableCell(withIdentifier: TopicTableViewCell.identifier) as! TopicTableViewCell
+        let cell = topicsTableView.dequeueReusableCell(withIdentifier: TopicTableViewCell .identifier) as! TopicTableViewCell
         cell.delegate = self
         cell.configureCell(topic: searchLists[indexPath.row])
-        
         return cell
     }
     
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        var rowActions = [UITableViewRowAction]()
+
+        let download = UITableViewRowAction(style: .normal, title: "download") { (action, indexPath) in
+            self.topicLists[indexPath.row].isLoad = true
+            self.output.saveToBD(item: self.topicLists[indexPath.row])
+            
+        }
+        
+        let delete = UITableViewRowAction(style: .normal, title: "delete") { (action, indexPath) in
+            self.topicLists[indexPath.row].isLoad = false
+            DataManager.shared.removeTopic(indexPath: indexPath.row)
+            
+        }
+        
+        if topicLists[indexPath.row].isLoad {
+            rowActions.append(delete)
+        } else {
+            rowActions.append(download)
+        }
+        delete.backgroundColor = .red
+        return rowActions
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+    }
 }
 
 extension TopicViewController: TopicTableViewCellDelegate {
+    
     func readLinkLocal(_ cell: TopicTableViewCell) {
         let webView = CustomWebViewController()
         guard let indexTopic = topicsTableView.indexPath(for: cell)?.row else {return}
-        webView.url = searchLists[indexTopic].link
+        webView.url = topicLists[indexTopic].link
         self.navigationController?.pushViewController(webView, animated: true)
     }
 }
 
-extension TopicViewController: FeedParserDelegate {
-    func feedGetElements(rssItems: [RSSItem]) {
-        topicLists = rssItems
-        searchLists = topicLists
-        print(rssItems)
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-            self.activityIndicator.hidesWhenStopped = true
-            self.topicsTableView.isHidden = false
-            self.topicsTableView.reloadData()
-        }
-    }
-}
-
 extension TopicViewController: TopicViewInput {
-    func topicsGet(items: [RSSItem]) {
-        topicLists = items
-        searchLists = topicLists
-        print(items)
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-            self.activityIndicator.hidesWhenStopped = true
-            self.topicsTableView.isHidden = false
-            self.topicsTableView.reloadData()
+    func onGetSettingsItems(itemsCount: Int) {
+        
+        if itemsCount == 0 {
+            showSettingController()
         }
     }
     
+    func onGetTopics(items: [RSSItem]) {
+        topicLists += items
+        searchLists = topicLists
+        
+        hideIndicator()
+    }
+    
     func setupState() {
+        topicsTableView.isHidden = true
         topicsTableView.delegate = self
         topicsTableView.dataSource = self
-        topicsTableView.isHidden = true
+        topicsTableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshTable(_:)), for: .valueChanged)
         
         topicSearchBar.delegate = self
 
         self.title = "Dzone RSS News"
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), landscapeImagePhone: UIImage(named: "settings"), style: .plain, target: self, action: #selector(settingButtonTouchUpInside))
+        let rightBarButtonItem = UIButton()
+        rightBarButtonItem.addTarget(self, action: #selector(settingButtonTouchUpInside(_:)), for: .touchUpInside)
+        rightBarButtonItem.setImage(UIImage(named: "settings"), for: .normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonItem)
         
-        createActivityIndicator()
-        activityIndicator.startAnimating()
-        activityIndicator.backgroundColor = .white
+        modesState.setTitle("Online", forSegmentAt: 0)
+        modesState.setTitle("Offline", forSegmentAt: 1)
     }
 }
 
@@ -122,7 +180,6 @@ extension TopicViewController: UISearchBarDelegate {
         searchLists.removeAll()
         if searchText == "" {
             searchLists = topicLists
-            topicsTableView.reloadData()
         }
         
         for item in topicLists {
@@ -130,12 +187,16 @@ extension TopicViewController: UISearchBarDelegate {
                 searchLists.append(item)
             }
         }
+        
         topicsTableView.reloadData()
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 
-extension TopicViewController: SaveStateCategoriesDelegate {
-    func saveSettings(for list: [String]) {
-        print(list)
+extension TopicViewController: SaveSettingsItemsDelegate {
+    func saveSettingsItems() {
+        output.updateTopics()
     }
 }

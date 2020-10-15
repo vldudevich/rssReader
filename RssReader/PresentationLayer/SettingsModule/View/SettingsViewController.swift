@@ -7,144 +7,88 @@
 //
 
 import UIKit
+import CoreData
 
-protocol SaveStateCategoriesDelegate {
-    func saveSettings(for list: [String])
+protocol SaveSettingsItemsDelegate: AnyObject {
+    func saveSettingsItems()
 }
 
 class SettingsViewController: UIViewController {
-    
-    @IBOutlet private weak var allCategorySwitch: UISwitch!
-    @IBOutlet private weak var agileCategorySwitch: UISwitch!
-    @IBOutlet private weak var AICategorySwitch: UISwitch!
-    @IBOutlet private weak var bigDataCategorySwitch: UISwitch!
-    @IBOutlet private weak var cloudCategorySwitch: UISwitch!
-    @IBOutlet private weak var dataBaseCategorySwitch: UISwitch!
-    @IBOutlet private weak var devOpsCategorySwitch: UISwitch!
-    @IBOutlet private weak var integrationCategorySwitch: UISwitch!
-    @IBOutlet private weak var IOTCategorySwitch: UISwitch!
-    @IBOutlet private weak var javaCategorySwitch: UISwitch!
-    @IBOutlet private weak var microServicesCategorySwitch: UISwitch!
-    @IBOutlet private weak var openSourceCategorySwitch: UISwitch!
-    @IBOutlet private weak var perfomanceCategorySwitch: UISwitch!
-    @IBOutlet private weak var securityCategorySwitch: UISwitch!
-    @IBOutlet private weak var webDevCategorySwitch: UISwitch!
+
+    @IBOutlet weak var categoriesCollectionView: UICollectionView!
     
     var output: SettingsViewOutput!
-    var bufTopicLists = [String]()
-    var topicLists = [String]()
-    var delegate: SaveStateCategoriesDelegate!
-    
+    var activeSettingItem = [Int]()
+    weak var delegate: SaveSettingsItemsDelegate!
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         output.viewOnDidLoad()
+        output.loadFromBD()
     }
+}
+extension SettingsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    @IBAction private func saveConfigurationTouchUpInside(_ sender: Any) {
-        if topicLists.count != 0 {
-            delegate.saveSettings(for: topicLists)
-            self.dismiss(animated: true, completion: nil)
-        } else {
-            var alertController = UIAlertController()
-            alertController = UIAlertController(title: "Error", message: "You need to choose at least 1 topic", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alertController.addAction(action)
-            self.present(alertController, animated: true, completion: nil)
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            return TopicThemes.allCases.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SettingSectionHeaderReusableView.indentifier, for: indexPath) as? SettingSectionHeaderReusableView {
+            sectionHeader.sectionHeaderLabel.text = "Categories"
+            sectionHeader.sectionHeaderDividerView.backgroundColor = .lightGray
+            return sectionHeader
         }
+        return UICollectionReusableView()
     }
     
-    @IBAction private func saveStateSwitch(_ sender: UISwitch) {
-        switch sender {
-            
-        case allCategorySwitch: changeAllCategoryToList(value: allCategorySwitch.isOn)
-        case agileCategorySwitch: changeCategoryToList(value: agileCategorySwitch.isOn, nameCategory: TopicThemes.agile.rawValue)
-        case AICategorySwitch: changeCategoryToList(value: AICategorySwitch.isOn, nameCategory: TopicThemes.AI.rawValue)
-        case bigDataCategorySwitch: changeCategoryToList(value: bigDataCategorySwitch.isOn, nameCategory: TopicThemes.bigData.rawValue)
-        case cloudCategorySwitch: changeCategoryToList(value: cloudCategorySwitch.isOn, nameCategory: TopicThemes.cloud.rawValue)
-        case dataBaseCategorySwitch: changeCategoryToList(value: dataBaseCategorySwitch.isOn, nameCategory: TopicThemes.dataBase.rawValue)
-        case devOpsCategorySwitch: changeCategoryToList(value: devOpsCategorySwitch.isOn, nameCategory: TopicThemes.devOps.rawValue)
-        case integrationCategorySwitch: changeCategoryToList(value: integrationCategorySwitch.isOn, nameCategory: TopicThemes.integration.rawValue)
-        case IOTCategorySwitch: changeCategoryToList(value: IOTCategorySwitch.isOn, nameCategory: TopicThemes.IOT.rawValue)
-        case javaCategorySwitch: changeCategoryToList(value: javaCategorySwitch.isOn, nameCategory: TopicThemes.java.rawValue)
-        case microServicesCategorySwitch: changeCategoryToList(value: microServicesCategorySwitch.isOn, nameCategory: TopicThemes.microServices.rawValue)
-        case openSourceCategorySwitch: changeCategoryToList(value: openSourceCategorySwitch.isOn, nameCategory: TopicThemes.openSource.rawValue)
-        case perfomanceCategorySwitch: changeCategoryToList(value: perfomanceCategorySwitch.isOn, nameCategory: TopicThemes.openSource.rawValue)
-        case securityCategorySwitch: changeCategoryToList(value: securityCategorySwitch.isOn, nameCategory: TopicThemes.security.rawValue)
-        case webDevCategorySwitch: changeCategoryToList(value: webDevCategorySwitch.isOn, nameCategory: TopicThemes.webDev.rawValue)
-            
-        default:
-            return
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = categoriesCollectionView.dequeueReusableCell(withReuseIdentifier: CategoriesCollectionViewCell.indentifier, for: indexPath) as! CategoriesCollectionViewCell
+        cell.delegate = self
+         
+        if activeSettingItem.contains(indexPath.row) {
+            cell.configureCell(settingItemName: TopicThemes.allCases[indexPath.row].rawValue, settingItemSwitchState: true)
+        } else {
+            cell.configureCell(settingItemName: TopicThemes.allCases[indexPath.row].rawValue, settingItemSwitchState: false)
         }
         
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        categoriesCollectionView.deselectItem(at: indexPath, animated: true)
     }
 }
 extension SettingsViewController: SettingsViewInput {
+    func loadStateFromBD(indexOfCategory: Int) {
+        activeSettingItem.append(indexOfCategory)
+    }
+    
     func setupState() {
         self.title = "Zones to Subscrtibe"
         
-        allCategorySwitch.isOn = true
-        lockOtherSwitches()
+        categoriesCollectionView.delegate = self
+        categoriesCollectionView.dataSource = self
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(donePressTouchUpInside))
     }
 }
 
+extension SettingsViewController: CategoriesCollectionViewCellDelegate {
+    
+    func valueChangeSwitch(_ cell: CategoriesCollectionViewCell) {
+        guard let index = categoriesCollectionView.indexPath(for: cell)?.row else { return }
+        if cell.categorySwitch.isOn {
+            output.turnOnSwitch(indexOfCategory: index)
+        } else {
+            output.turnOffSwitch(indexOfCategory: index)
+        }
+    }
+}
 private extension SettingsViewController {
     
-    func changeAllCategoryToList(value: Bool) {
-        value ? lockOtherSwitches() : unlockOtherSwitches()
-    }
-    
-    func changeCategoryToList(value: Bool, nameCategory: String) {
-        value ? addToList(nameCategory: nameCategory) : removeFromList(nameCategory: nameCategory)
-    }
-    
-    func removeFromList(nameCategory: String) {
-        let index = topicLists.firstIndex(of: nameCategory)
-        topicLists.remove(at: index!)
-    }
-    
-    func addToList(nameCategory: String) {
-        topicLists.append(nameCategory)
-    }
-    
-    func unlockOtherSwitches() {
-        
-        topicLists.removeAll()
-        topicLists = bufTopicLists
-        
-        agileCategorySwitch.isEnabled = true
-        AICategorySwitch.isEnabled = true
-        bigDataCategorySwitch.isEnabled = true
-        cloudCategorySwitch.isEnabled = true
-        dataBaseCategorySwitch.isEnabled = true
-        devOpsCategorySwitch.isEnabled = true
-        integrationCategorySwitch.isEnabled = true
-        IOTCategorySwitch.isEnabled = true
-        javaCategorySwitch.isEnabled = true
-        microServicesCategorySwitch.isEnabled = true
-        openSourceCategorySwitch.isEnabled = true
-        perfomanceCategorySwitch.isEnabled = true
-        securityCategorySwitch.isEnabled = true
-        webDevCategorySwitch.isEnabled = true
-    }
-    func lockOtherSwitches() {
-        
-        bufTopicLists = topicLists
-        topicLists.removeAll()
-        topicLists.append(TopicThemes.all.rawValue)
-        
-        agileCategorySwitch.isEnabled = false
-        AICategorySwitch.isEnabled = false
-        bigDataCategorySwitch.isEnabled = false
-        cloudCategorySwitch.isEnabled = false
-        dataBaseCategorySwitch.isEnabled = false
-        devOpsCategorySwitch.isEnabled = false
-        integrationCategorySwitch.isEnabled = false
-        IOTCategorySwitch.isEnabled = false
-        javaCategorySwitch.isEnabled = false
-        microServicesCategorySwitch.isEnabled = false
-        openSourceCategorySwitch.isEnabled = false
-        perfomanceCategorySwitch.isEnabled = false
-        securityCategorySwitch.isEnabled = false
-        webDevCategorySwitch.isEnabled = false
+    @objc func donePressTouchUpInside() {
+        delegate.saveSettingsItems()
+        dismiss(animated: true, completion: nil)
     }
 }

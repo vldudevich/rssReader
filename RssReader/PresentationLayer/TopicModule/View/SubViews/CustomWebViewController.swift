@@ -17,10 +17,17 @@ class CustomWebViewController: UIViewController {
         super.viewDidLoad()
         
         let webView = WKWebView()
-        let urlRequest = URLRequest(url: URL(string: url)!)
-        
-        webView.load(urlRequest)
-        
+        let queue = DispatchQueue.global(qos: .utility)
+        queue.async {
+            DataManager.shared.getWebData(url: self.url) { (data) in
+                DispatchQueue.main.async {
+                if let htmlData = String(data: data, encoding: String.Encoding.utf8) {
+                    webView.loadHTMLString(htmlData, baseURL: URL(string: self.url)!)
+                    }
+                }
+            }
+        }
+
         view.addSubview(webView)
         webView.fillToSuperview()
     }

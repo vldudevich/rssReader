@@ -10,4 +10,5 @@ import Foundation
 
 protocol SettingsViewInput: AnyObject {
     func setupState()
+    func loadStateFromBD(indexOfCategory: Int)
 }

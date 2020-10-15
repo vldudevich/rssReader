@@ -9,6 +9,7 @@
 import Foundation
 
 protocol TopicViewOutput {
-    func viewDidOnLoad(urlToSearch: String)
-    func searchTopicByTitleName(stringToSearch: String)
+    func viewDidOnLoad()
+    func updateTopics()
+    func saveToBD(item: RSSItem)
 }

@@ -10,4 +10,9 @@ import Foundation
 
 protocol SettingsViewOutput {
     func viewOnDidLoad()
+    func turnOnSwitch(indexOfCategory: Int)
+    func turnOffSwitch(indexOfCategory: Int)
+    func loadFromBD()
 }
+
+

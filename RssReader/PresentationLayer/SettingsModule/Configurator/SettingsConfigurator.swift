@@ -17,7 +17,7 @@ class SettingsViewConfigurator {
     
     private func configure(viewController: SettingsViewController) {
         let presenter = SettingsViewPresenter()
-        presenter.view = viewController as! SettingsViewInput
+        presenter.view = viewController
         viewController.output = presenter
     }
 }
