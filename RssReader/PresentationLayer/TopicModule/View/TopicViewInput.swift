@@ -10,6 +10,6 @@ import Foundation
 
 protocol TopicViewInput: AnyObject {
     func setupState()
-    func onGetTopics(items: [RSSItem])
+    func onGetTopics(items: [SavedTopic])
     func onGetSettingsItems(itemsCount: Int)
 }

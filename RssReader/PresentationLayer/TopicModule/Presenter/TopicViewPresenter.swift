@@ -11,61 +11,46 @@ import UIKit
 import CoreData
 
 class TopicViewPresenter: TopicViewOutput {
+    func saveToBD(item: RSSItem) {
+    
+    }
+    
     weak var view: TopicViewInput!
     
-    func saveToBD(item: RSSItem) {
-        
-        let currentItem = SavedTopic(context: PersistenceService.shared.persistentContainer.viewContext)
-        
-        let group = DispatchGroup()
-        group.enter()
-        currentItem.title = item.title
-        currentItem.descr = item.description
-        currentItem.pubDate = item.pubDate
-        currentItem.saved = item.isLoad
-        group.leave()
-        group.enter()
-        
-        DataManager.shared.getWebData(url: item.currentMedia) { (data) in
-            currentItem.image = data
-            group.leave()
-        }
-        group.enter()
-        DataManager.shared.getWebData(url: item.link) { (data) in
-            currentItem.link = data
-            group.leave()
-        }
-        
-        group.notify(queue: .main) {
-            PersistenceService.shared.saveContext()
-        }
-    }
+//    func saveToBD(item: SavedTopic) {
+//
+//        let currentItem = SavedTopic(context: PersistenceService.shared.persistentContainer.viewContext)
+//
+//        let group = DispatchGroup()
+//        currentItem.title = item.title
+//        currentItem.descr = item.descr
+//        currentItem.pubDate = item.pubDate
+//        currentItem.saved = item.isLoad
+//        group.enter()
+//
+//        DataManager.shared.getWebData(url: item.currentMedia) { (data) in
+//            currentItem.image = data
+//            group.leave()
+//        }
+//        group.enter()
+//        DataManager.shared.getWebData(url: item.link) { (data) in
+//            currentItem.link = data
+//            group.leave()
+//        }
+//
+//        group.notify(queue: .main) {
+//            PersistenceService.shared.saveContext()
+//        }
+//    }
     
     func viewDidOnLoad() {
         view.setupState()
-        if DataManager.shared.isAccess {
+        if DataManager.shared.isNetworkAccess {
             getSettingsItem()
-        } else {
-            getSavingItem()
-        }
-       
-    }
-    
-    func getSavingItem() {
-        let items = [RSSItem]()
-//        DataManager.shared.getTopicItems { (savedTopic) in
-//            for index in 0..<items.count {
-//                for item in savedTopic {
-//                    items[index].title = item.title ?? ""
-//                    items[index].pubDate = item.pubDate ?? ""
-//                    items[index].description = item.descr ?? ""
-//                    items[index].category = item.category ?? []
-//                    items[index].currentMedia =
-//                }
-//            }
+//        } else {
+//            getSavingItem()
 //        }
-//        view.onGetTopics(items: items)
-        
+        }
     }
     
     func updateTopics() {
@@ -124,20 +109,9 @@ private extension TopicViewPresenter {
 
 extension TopicViewPresenter: FeedParserDelegate {
     func feedGetElements(rssItems: [RSSItem]) {
-        var items = [RSSItem]()
-        items += rssItems
-        DataManager.shared.getTopicItems { (savedTopic) in
-            for index in 0..<items.count {
-                for item in savedTopic {
-                    
-                    if item.title == items[index].title {
-                
-                        items[index].isLoad = true
-                        
-                    }
-                }
-            }
-        }
+        var items = [SavedTopic]()
+        
+        rssItems.forEach {items.append(SavedTopic(topicObject: $0, context: PersistenceService.shared.persistentContainer.viewContext))}
         view.onGetTopics(items: items)
     }
 }

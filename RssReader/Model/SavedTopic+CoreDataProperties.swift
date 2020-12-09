@@ -2,7 +2,7 @@
 //  SavedTopic+CoreDataProperties.swift
 //  
 //
-//  Created by vladislav on 30.09.2020.
+//  Created by vladislav on 16.10.2020.
 //
 //
 
@@ -16,12 +16,14 @@ extension SavedTopic {
         return NSFetchRequest<SavedTopic>(entityName: "SavedTopic")
     }
 
-    @NSManaged public var title: String?
     @NSManaged public var category: [String]?
     @NSManaged public var descr: String?
-    @NSManaged public var image: Data?
-    @NSManaged public var link: Data?
+    @NSManaged public var imageData: Data?
+    @NSManaged public var imageLink: String?
+    @NSManaged public var webLinkData: Data?
     @NSManaged public var pubDate: String?
     @NSManaged public var saved: Bool
+    @NSManaged public var title: String?
+    @NSManaged public var webLink: String?
 
 }

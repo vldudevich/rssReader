@@ -8,13 +8,15 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class DataManager {
     
     static let shared = DataManager()
     
     private init() {}
-    var isAccess: Bool {
+    
+    var isNetworkAccess: Bool {
         return API.shared.getInternetActivity()
     }
     
@@ -27,6 +29,7 @@ class DataManager {
             }
         }
     }
+    
     func getWebData(url: String, topicData: @escaping (Data) -> Void) {
         API.shared.requestForGetData(for: url, success: { (data) in
             topicData(data)
@@ -36,6 +39,7 @@ class DataManager {
             }
         }
     }
+    
     func fillTheBD() {
         
         let managedContext =
@@ -75,6 +79,7 @@ class DataManager {
         } catch {}
         
     }
+    
     func removeTopic(indexPath: Int) {
         
         let fetchRequest:
@@ -88,6 +93,7 @@ class DataManager {
         } catch {}
         
     }
+    
     func getSettingItems(completion: ([SettingItem]) -> Void) {
         
         let fetchRequest:
@@ -99,8 +105,17 @@ class DataManager {
             PersistenceService.shared.saveContext()
             
         } catch {}
-        
+
     }
     
+    func getImage(url: String, succes: @escaping (_ success: UIImage) -> Void)  {
+        if let url = URL(string: url) {
+            Utils.load(url: url) { (image) in
+                guard let image = image else { return }
+                succes(image)
+            }
+        } else {
+            succes(UIImage(named: "nophoto")!)
+        }
+    }
 }
-

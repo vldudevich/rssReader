@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 import UIKit
 
 protocol FeedParserDelegate: AnyObject {
@@ -34,7 +35,6 @@ class RSSItem {
         self.isLoad = isload
         
     }
-    
     func getImage(succes: @escaping (_ success: UIImage) -> Void)  {
         if let url = URL(string: currentMedia) {
             Utils.load(url: url) { (image) in

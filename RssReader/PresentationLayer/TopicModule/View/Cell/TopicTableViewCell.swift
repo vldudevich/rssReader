@@ -23,27 +23,32 @@ class TopicTableViewCell: UITableViewCell {
     @IBOutlet private weak var categoryTopicLabel: UILabel!
     
     var delegate: TopicTableViewCellDelegate?
-    
+    let imageCache = NSCache<NSString, UIImage>()
+
+
     @IBAction func readClick(_ sender: Any) {
         delegate?.readLinkLocal(self)
     }
     
-    func configureCell(topic: RSSItem) {
-        
+    func configureCell(topic: SavedTopic) {
         titleTopicLabel.text = topic.title
         pubDateTopicLabel.text = topic.pubDate
-        descriptionTopicLabel.text = topic.description
+        descriptionTopicLabel.text = topic.descr
         pubDateTopicLabel.text = topic.pubDate
-        categoryTopicLabel.text = topic.category.first?.capitalized
-        topic.getImage { (image) in
+        categoryTopicLabel.text = topic.category?.first?.capitalized
+        DataManager.shared.getImage(url: topic.imageLink ?? "") { (image) in
             self.topicImageView.image = image
         }
+        var a = [1,2,3,4,5,6,7,8]
+        for i in 5..<a.count
+        {
+            print(a[i])
+        }
+        
     }
-    
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+        // Conbfigure the view for the selected state
     }
-
 }

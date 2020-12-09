@@ -17,8 +17,8 @@ class TopicViewController: UIViewController {
     
     var output: TopicViewOutput!
     
-    private var topicLists = [RSSItem]()
-    private var searchLists = [RSSItem]()
+    private var topicLists = [SavedTopic]()
+    private var searchLists = [SavedTopic]()
     private var activityIndicator = UIActivityIndicatorView()
     
     private let refreshControl = UIRefreshControl()
@@ -26,6 +26,19 @@ class TopicViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         output.viewDidOnLoad()
+    }
+    
+    
+   @IBAction private func changeModesControlSwitch(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 1 {
+            searchLists.removeAll()
+            topicLists.filter {$0.saved}.forEach {searchLists.append($0) }
+            topicsTableView.reloadData()
+        } else {
+            searchLists = topicLists
+            topicsTableView.reloadData()
+            
+        }
     }
 }
 
@@ -56,17 +69,6 @@ private extension TopicViewController {
         showSettingController()
     }
     
-   @IBAction func changeModesControlSwitch(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 1 {
-            searchLists.removeAll()
-            topicLists.filter {$0.isLoad}.forEach {searchLists.append($0) }
-            topicsTableView.reloadData()
-        } else {
-            searchLists = topicLists
-            topicsTableView.reloadData()
-            
-        }
-    }
     
     func hideIndicator() {
         DispatchQueue.main.async {
@@ -79,6 +81,7 @@ private extension TopicViewController {
     }
     
     @objc func refreshTable(_ sender: UIRefreshControl) {
+        topicLists.removeAll()
         output.updateTopics()
         sender.endRefreshing()
     }
@@ -105,18 +108,18 @@ extension TopicViewController: UITableViewDataSource, UITableViewDelegate {
         var rowActions = [UITableViewRowAction]()
 
         let download = UITableViewRowAction(style: .normal, title: "download") { (action, indexPath) in
-            self.topicLists[indexPath.row].isLoad = true
-            self.output.saveToBD(item: self.topicLists[indexPath.row])
+            self.topicLists[indexPath.row].saved = true
+//            self.output.saveToBD(item: self.topicLists[indexPath.row])
             
         }
         
         let delete = UITableViewRowAction(style: .normal, title: "delete") { (action, indexPath) in
-            self.topicLists[indexPath.row].isLoad = false
+            self.topicLists[indexPath.row].saved = false
             DataManager.shared.removeTopic(indexPath: indexPath.row)
             
         }
         
-        if topicLists[indexPath.row].isLoad {
+        if topicLists[indexPath.row].saved {
             rowActions.append(delete)
         } else {
             rowActions.append(download)
@@ -134,12 +137,13 @@ extension TopicViewController: TopicTableViewCellDelegate {
     func readLinkLocal(_ cell: TopicTableViewCell) {
         let webView = CustomWebViewController()
         guard let indexTopic = topicsTableView.indexPath(for: cell)?.row else {return}
-        webView.url = topicLists[indexTopic].link
+        webView.url = topicLists[indexTopic].webLink!
         self.navigationController?.pushViewController(webView, animated: true)
     }
 }
 
 extension TopicViewController: TopicViewInput {
+    
     func onGetSettingsItems(itemsCount: Int) {
         
         if itemsCount == 0 {
@@ -147,11 +151,12 @@ extension TopicViewController: TopicViewInput {
         }
     }
     
-    func onGetTopics(items: [RSSItem]) {
+    func onGetTopics(items: [SavedTopic]) {
         topicLists += items
         searchLists = topicLists
+        topicsTableView.isHidden = false
+        topicsTableView.reloadData()
         
-        hideIndicator()
     }
     
     func setupState() {
@@ -183,7 +188,7 @@ extension TopicViewController: UISearchBarDelegate {
         }
         
         for item in topicLists {
-            if searchText != "" && item.title.contains(searchText) {
+            if searchText != "" && item.title!.contains(searchText) {
                 searchLists.append(item)
             }
         }

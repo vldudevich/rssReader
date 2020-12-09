@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8611A90A2539A27E006A0978 /* SettingItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611A9062539A27D006A0978 /* SettingItem+CoreDataClass.swift */; };
+		8611A90B2539A27E006A0978 /* SavedTopic+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611A9072539A27D006A0978 /* SavedTopic+CoreDataClass.swift */; };
+		8611A90C2539A27E006A0978 /* SavedTopic+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611A9082539A27E006A0978 /* SavedTopic+CoreDataProperties.swift */; };
+		8611A90D2539A27E006A0978 /* SettingItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611A9092539A27E006A0978 /* SettingItem+CoreDataProperties.swift */; };
 		862651962500D97A00B2138A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862651952500D97A00B2138A /* AppDelegate.swift */; };
 		8626519D2500D97A00B2138A /* TopicViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8626519B2500D97A00B2138A /* TopicViewController.storyboard */; };
 		862651A02500D97A00B2138A /* RssReader.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8626519E2500D97A00B2138A /* RssReader.xcdatamodeld */; };
@@ -39,10 +43,6 @@
 		86B9C5F52508FDBC009972D9 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86B9C5F42508FDBC009972D9 /* SettingsViewController.storyboard */; };
 		86B9C5F72508FDD2009972D9 /* SettingsViewInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9C5F62508FDD2009972D9 /* SettingsViewInitializer.swift */; };
 		86B9C5F92508FDDB009972D9 /* SettingsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9C5F82508FDDB009972D9 /* SettingsConfigurator.swift */; };
-		86E5E5D62524A10600E694AE /* SettingItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E5E5D22524A10600E694AE /* SettingItem+CoreDataClass.swift */; };
-		86E5E5D72524A10600E694AE /* SettingItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E5E5D52524A10600E694AE /* SettingItem+CoreDataProperties.swift */; };
-		86E5E5D82524A10600E694AE /* SavedTopic+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E5E5D32524A10600E694AE /* SavedTopic+CoreDataClass.swift */; };
-		86E5E5D92524A10600E694AE /* SavedTopic+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E5E5D42524A10600E694AE /* SavedTopic+CoreDataProperties.swift */; };
 		B165B298B3AD0E7F8B03D08F /* Pods_RssReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AEDAD8A3C95391ECEEE79C /* Pods_RssReader.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +50,10 @@
 		2BD1DD579323386F1F016315 /* Pods-RssReader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RssReader.debug.xcconfig"; path = "Target Support Files/Pods-RssReader/Pods-RssReader.debug.xcconfig"; sourceTree = "<group>"; };
 		33AEDAD8A3C95391ECEEE79C /* Pods_RssReader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RssReader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E111F7D2D20833263213631 /* Pods-RssReader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RssReader.release.xcconfig"; path = "Target Support Files/Pods-RssReader/Pods-RssReader.release.xcconfig"; sourceTree = "<group>"; };
+		8611A9062539A27D006A0978 /* SettingItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SettingItem+CoreDataClass.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SettingItem+CoreDataClass.swift"; sourceTree = "<absolute>"; };
+		8611A9072539A27D006A0978 /* SavedTopic+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SavedTopic+CoreDataClass.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SavedTopic+CoreDataClass.swift"; sourceTree = "<absolute>"; };
+		8611A9082539A27E006A0978 /* SavedTopic+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SavedTopic+CoreDataProperties.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SavedTopic+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		8611A9092539A27E006A0978 /* SettingItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SettingItem+CoreDataProperties.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SettingItem+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 		862651922500D97A00B2138A /* RssReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RssReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		862651952500D97A00B2138A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8626519C2500D97A00B2138A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/TopicViewController.storyboard; sourceTree = "<group>"; };
@@ -84,10 +88,6 @@
 		86B9C5F42508FDBC009972D9 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		86B9C5F62508FDD2009972D9 /* SettingsViewInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewInitializer.swift; sourceTree = "<group>"; };
 		86B9C5F82508FDDB009972D9 /* SettingsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConfigurator.swift; sourceTree = "<group>"; };
-		86E5E5D22524A10600E694AE /* SettingItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SettingItem+CoreDataClass.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SettingItem+CoreDataClass.swift"; sourceTree = "<absolute>"; };
-		86E5E5D32524A10600E694AE /* SavedTopic+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SavedTopic+CoreDataClass.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SavedTopic+CoreDataClass.swift"; sourceTree = "<absolute>"; };
-		86E5E5D42524A10600E694AE /* SavedTopic+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SavedTopic+CoreDataProperties.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SavedTopic+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
-		86E5E5D52524A10600E694AE /* SettingItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SettingItem+CoreDataProperties.swift"; path = "/Users/vladislav/Documents/RssReader/RssReader/Model/SettingItem+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,10 +173,10 @@
 		867E09452506780B008B1A47 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				86E5E5D22524A10600E694AE /* SettingItem+CoreDataClass.swift */,
-				86E5E5D52524A10600E694AE /* SettingItem+CoreDataProperties.swift */,
-				86E5E5D32524A10600E694AE /* SavedTopic+CoreDataClass.swift */,
-				86E5E5D42524A10600E694AE /* SavedTopic+CoreDataProperties.swift */,
+				8611A9072539A27D006A0978 /* SavedTopic+CoreDataClass.swift */,
+				8611A9082539A27E006A0978 /* SavedTopic+CoreDataProperties.swift */,
+				8611A9062539A27D006A0978 /* SettingItem+CoreDataClass.swift */,
+				8611A9092539A27E006A0978 /* SettingItem+CoreDataProperties.swift */,
 				867AD48D25013AD100F6E47F /* XMLParser.swift */,
 				862D3CE42514DA5000041FA0 /* CoreDataStack.swift */,
 			);
@@ -418,7 +418,6 @@
 				86B9C5E42508F527009972D9 /* UIView.swift in Sources */,
 				867E095825067E26008B1A47 /* API.swift in Sources */,
 				86B9C5ED2508FD7E009972D9 /* SettingsViewPresenter.swift in Sources */,
-				86E5E5D92524A10600E694AE /* SavedTopic+CoreDataProperties.swift in Sources */,
 				862D3CD22510C9CA00041FA0 /* TopicThemes.swift in Sources */,
 				862D3CDE2512442700041FA0 /* SettingSectionHeaderReusableView.swift in Sources */,
 				867E095A25067EEE008B1A47 /* DataManager.swift in Sources */,
@@ -429,9 +428,9 @@
 				867E095D25076F6E008B1A47 /* TopicTableViewCell.swift in Sources */,
 				867E094E25067CB3008B1A47 /* TopicViewPresenter.swift in Sources */,
 				867E095625067CE3008B1A47 /* TopicViewOutput.swift in Sources */,
-				86E5E5D62524A10600E694AE /* SettingItem+CoreDataClass.swift in Sources */,
+				8611A90C2539A27E006A0978 /* SavedTopic+CoreDataProperties.swift in Sources */,
+				8611A90A2539A27E006A0978 /* SettingItem+CoreDataClass.swift in Sources */,
 				862D3CE52514DA5000041FA0 /* CoreDataStack.swift in Sources */,
-				86E5E5D72524A10600E694AE /* SettingItem+CoreDataProperties.swift in Sources */,
 				867AD48E25013AD100F6E47F /* XMLParser.swift in Sources */,
 				86B9C5F32508FDAA009972D9 /* SettingsViewController.swift in Sources */,
 				86B9C5F92508FDDB009972D9 /* SettingsConfigurator.swift in Sources */,
@@ -439,9 +438,10 @@
 				86B9C5EF2508FD93009972D9 /* SettingsViewInput.swift in Sources */,
 				867E095025067CC1008B1A47 /* TopicViewInitializer.swift in Sources */,
 				867E094925067BBA008B1A47 /* TopicViewController.swift in Sources */,
+				8611A90D2539A27E006A0978 /* SettingItem+CoreDataProperties.swift in Sources */,
 				867E094425064D97008B1A47 /* String.swift in Sources */,
+				8611A90B2539A27E006A0978 /* SavedTopic+CoreDataClass.swift in Sources */,
 				862651A02500D97A00B2138A /* RssReader.xcdatamodeld in Sources */,
-				86E5E5D82524A10600E694AE /* SavedTopic+CoreDataClass.swift in Sources */,
 				86B9C5F72508FDD2009972D9 /* SettingsViewInitializer.swift in Sources */,
 				862D3CD02510C97600041FA0 /* APIConstants.swift in Sources */,
 				862651962500D97A00B2138A /* AppDelegate.swift in Sources */,

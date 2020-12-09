@@ -2,7 +2,7 @@
 //  SettingItem+CoreDataProperties.swift
 //  
 //
-//  Created by vladislav on 30.09.2020.
+//  Created by vladislav on 16.10.2020.
 //
 //
 
